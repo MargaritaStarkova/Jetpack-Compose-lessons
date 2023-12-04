@@ -53,8 +53,8 @@ fun TimesTable() {
                     Box(
                         modifier = modifier
                             .fillMaxHeight()
-                            .weight(1f)
-                            .border(1.dp, color = Color.DarkGray),
+                            .weight(weight = 1f)
+                            .border(width = 1.dp, color = Color.DarkGray),
                         contentAlignment = Alignment.Center,
 
                         ) {
