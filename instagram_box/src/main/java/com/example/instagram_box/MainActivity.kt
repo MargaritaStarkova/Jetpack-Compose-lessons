@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -25,10 +26,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
@@ -63,6 +68,31 @@ class MainActivity : ComponentActivity() {
 
 @Preview(showBackground = true)
 @Composable
+fun TestImage() {
+    Box(modifier = Modifier
+        .size(200.dp)
+        .background(Color.Cyan)
+
+    ) {
+        Image(
+            painter = ColorPainter(color = Color.Yellow),
+            contentDescription = "",
+            modifier = Modifier
+                .background(color = Color.Green)
+                .padding(25.dp)
+                .clip(shape = CircleShape)
+                .size(100.dp)
+                .background(color = Color.Red)
+                .padding(25.dp),
+        )
+    }
+
+}
+
+//==================================================================================================
+
+/*@Preview(showBackground = true)
+@Composable
 fun TestText() {
     Text(
         buildAnnotatedString {
@@ -95,10 +125,9 @@ fun TestText() {
             }
         }
     )
-}
+}*/
 
-
-
+//==================================================================================================
 
 /*
 @Preview(showBackground = true)
@@ -136,4 +165,5 @@ fun CardTest() {
     }
 }
 */
+//==================================================================================================
 
