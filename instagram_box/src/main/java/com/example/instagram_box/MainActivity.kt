@@ -29,8 +29,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.instagram_box.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
@@ -50,6 +55,20 @@ class MainActivity : ComponentActivity() {
 
         }
     }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun TestText() {
+    Text(
+        text = "Hello, Rita!!!!",
+        fontSize = 26.sp,
+        fontWeight = FontWeight.ExtraBold,
+        fontStyle = FontStyle.Italic,
+        fontFamily = FontFamily.Serif,
+        textDecoration = TextDecoration.Underline
+    )
 }
 
 /*
