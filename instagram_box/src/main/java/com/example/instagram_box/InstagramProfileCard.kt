@@ -15,12 +15,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.instagram_box.theme.MyApplicationTheme
 
 
@@ -52,18 +57,20 @@ fun InstaBox() {
                     .background(Color.Cyan)
                     .size(50.dp)
             )
-            TwoBoxes()
-            TwoBoxes()
-            TwoBoxes()
 
+            UserStatistic(value = "6,950", header = "Posts")
+            UserStatistic(value = "436M", header = "Followers")
+            UserStatistic(value = "76", header = "Following")
         }
     }
-
 
 }
 
 @Composable
-private fun TwoBoxes() {
+private fun UserStatistic(
+    header: String,
+    value: String,
+    ) {
     Column(
         modifier = Modifier
             .height(80.dp),
@@ -71,17 +78,26 @@ private fun TwoBoxes() {
         verticalArrangement = Arrangement.SpaceEvenly
 
     ) {
-        Box(
-            modifier = Modifier
-                .border(1.dp, color = MaterialTheme.colors.onBackground)
-                .size(width = 60.dp, height = 20.dp)
+        Text(
+            text = value,
+            fontSize = 24.sp,
+            fontFamily = FontFamily.Cursive,
+           // color = MaterialTheme.colors.onBackground,
         )
-        Box(
-            modifier = Modifier
-                .border(1.dp, color = MaterialTheme.colors.onBackground)
-                .size(width = 60.dp, height = 20.dp)
+
+        Text(
+            text = header,
+            fontFamily = FontFamily.Default,
+            fontWeight = FontWeight.Bold,
+          //  color = MaterialTheme.colors.onBackground,
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun UserStatisticPreview() {
+    UserStatistic(header = "6,950", value = "Posts")
 }
 
 @Preview
