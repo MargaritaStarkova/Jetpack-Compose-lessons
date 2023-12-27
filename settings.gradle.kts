@@ -17,3 +17,4 @@ rootProject.name = "My Application"
 include(":app")
 include(":instagram_box")
 include(":vk_nwes_client")
+include(":material_components")
