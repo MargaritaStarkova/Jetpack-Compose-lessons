@@ -16,5 +16,6 @@ dependencyResolutionManagement {
 rootProject.name = "My Application"
 include(":app")
 include(":instagram_box")
-include(":vk_nwes_client")
+include(":vk_news_client")
 include(":material_components")
+include(":vk_news_main_screen")

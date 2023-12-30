@@ -1,5 +1,7 @@
 package com.example.instagram_box
 
+import android.util.Log
+import android.widget.ExpandableListView.OnChildClickListener
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,11 +18,17 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,11 +39,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.instagram_box.theme.MyApplicationTheme
 
-
+const val TAG = "MyLog"
 @Composable
-fun InstaBox() {
+fun InstaBox(
+    mainViewModel: MainViewModel,
+) {
+    Log.d(TAG, "InstaBox: +++++")
+    val isFollowed = mainViewModel.isFollowing.collectAsState()
 
     Card(
         modifier = Modifier.padding(8.dp),
@@ -47,9 +60,13 @@ fun InstaBox() {
 
         border = BorderStroke(1.dp, MaterialTheme.colors.onBackground),
     ) {
+        Log.d(TAG, "Card: +++++")
+
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
+            Log.d(TAG, "Column: +++++")
+
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically,
@@ -57,6 +74,8 @@ fun InstaBox() {
                     .fillMaxWidth()
 
             ) {
+                Log.d(TAG, "Row: +++++")
+
                 Image(
                     painter = painterResource(id = R.drawable.ic_instagram),
                     contentDescription = null,
@@ -90,26 +109,51 @@ fun InstaBox() {
                 fontFamily = FontFamily.SansSerif,
             )
 
-            Button(
-                onClick = { /*TODO*/ },
-                ) {
-                Text(
-                    text = "Follow",
-                    fontSize = 14.sp,
-                    fontFamily = FontFamily.SansSerif,
-                )
-            }
+            FollowButton(
+                isFollowed = isFollowed,
+                clickListener = {
+                    Log.d("MyLog", "InstaBox: $isFollowed")
+                    mainViewModel.changeFollowingStatus()
+                }
+            )
         }
-
     }
+}
 
+@Composable
+private fun FollowButton(
+    isFollowed: State<Boolean>,
+    clickListener: () -> Unit,
+) {
+
+    Log.d(TAG, "FollowButton: +++++")
+
+    Button(
+        onClick = {
+            clickListener()
+            Log.d(TAG, "Button: +++++")
+        },
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = if (isFollowed.value) MaterialTheme.colors.primary.copy(alpha = 0.5f)
+            else MaterialTheme.colors.primary
+        )
+    ) {
+        val text = if (isFollowed.value) "Unfollow" else "Follow"
+        Text(
+            text = text,
+            fontSize = 14.sp,
+            fontFamily = FontFamily.SansSerif,
+        )
+    }
 }
 
 @Composable
 private fun UserStatistic(
     header: String,
     value: String,
-    ) {
+) {
+    Log.d(TAG, "UserStatistic: +++++")
+
     Column(
         modifier = Modifier
             .height(80.dp),
@@ -131,31 +175,5 @@ private fun UserStatistic(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun UserStatisticPreview() {
-    UserStatistic(header = "6,950", value = "Posts")
-}
-
-@Preview
-@Composable
-fun CardLight() {
-    MyApplicationTheme(
-        darkTheme = false
-    ) {
-        InstaBox()
-    }
-
-}
-
-@Preview
-@Composable
-fun CardDark() {
-    MyApplicationTheme(
-        darkTheme = true
-    ) {
-        InstaBox()
-    }
-}
 
 
