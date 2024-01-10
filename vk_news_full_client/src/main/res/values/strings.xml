@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">vk_news_full_client</string>
+    <string name="main">Главная</string>
+    <string name="favorite">Избранное</string>
+    <string name="profile">Профиль</string>
+    <string name="text">Кобаныч, когда узнал, что если сотрудникам не платить, они начинают умирать от голода</string>
+
+</resources>
