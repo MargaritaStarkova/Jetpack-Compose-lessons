@@ -1,26 +1,17 @@
 package com.example.instagram_box
 
-import android.media.Image
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.CornerSize
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -28,23 +19,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.ColorPainter
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontSynthesis
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import com.example.instagram_box.theme.MyApplicationTheme
 
@@ -55,27 +36,65 @@ class MainActivity : ComponentActivity() {
         val viewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
         setContent {
-            MyApplicationTheme {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colors.background)
-                ) {
-                    InstaBox(mainViewModel = viewModel)
-                }
-
-            }
-
+            TextLazyColumn(viewModel)
         }
     }
 }
 
+@Composable
+fun TextLazyColumn(viewModel: MainViewModel) {
+    MyApplicationTheme {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.background),
+            contentAlignment = Alignment.Center,
+        ) {
+            LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
+                item { Text(
+                    text = "ГЛАВНАЯ",
+                    color = Color.Cyan,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp)
+                        .align(Alignment.Center)) }
+                items(10) {
+                    InstaBox(mainViewModel = viewModel)
+                }
+
+                item { Text(
+                    text = "КАКОЙ ТО ТЕКСТ",
+                    color = Color.Cyan,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp)
+                        .align(Alignment.Center)) }
+
+                item { Image(
+                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                    contentDescription = null,
+                    ) }
+
+                items(200) {
+                    InstaBox(mainViewModel = viewModel)
+                }
+            }
+        }
+    }
+}
+
+
 @Preview(showBackground = true)
 @Composable
 fun TestImage() {
-    Box(modifier = Modifier
-        .size(200.dp)
-        .background(Color.Cyan)
+    Box(
+        modifier = Modifier
+            .size(200.dp)
+            .background(Color.Cyan)
 
     ) {
         Image(
