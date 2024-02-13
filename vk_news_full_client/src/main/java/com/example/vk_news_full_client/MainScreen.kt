@@ -11,8 +11,8 @@ import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -21,12 +21,9 @@ import com.example.vk_news_full_client.domain.FeedPost
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun MainScreen() {
+fun MainScreen(viewModel: MainViewModel) {
 
     val snackbarHostState = SnackbarHostState()
-    val feedPost = remember {
-        mutableStateOf(FeedPost())
-    }
 
     Scaffold(snackbarHost = {
         SnackbarHost(hostState = snackbarHostState)
@@ -50,22 +47,14 @@ fun MainScreen() {
             }
         }
     }, content = {
-       PostCard(modifier = Modifier.padding(8.dp),
-           feedPost = feedPost.value,
-           onStatisticsItemClicked = { newItem ->
-               val oldStatistics = feedPost.value.statistics
-               val newStatistics = oldStatistics.toMutableList().apply {
-                    replaceAll { oldItem ->
-                        if (oldItem.type == newItem.type) {
-                            oldItem.copy(count = oldItem.count + 1)
-                        } else {
-                            oldItem
-                        }
-                    }
-               }
+        val feedPost = viewModel.feedState.observeAsState(FeedPost())
 
-               feedPost.value = feedPost.value.copy(statistics = newStatistics)
-           }
-       )
+        PostCard(modifier = Modifier.padding(8.dp),
+            feedPost = feedPost.value ,
+            onViewsItemClicked = viewModel::updateCount,
+            onShareItemClicked = viewModel::updateCount,
+            onCommentsItemClicked = viewModel::updateCount,
+            onLikesItemClicked = viewModel::updateCount,
+        )
     })
 }

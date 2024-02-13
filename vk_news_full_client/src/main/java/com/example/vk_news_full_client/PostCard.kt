@@ -34,13 +34,15 @@ import com.example.instagram_box.R
 import com.example.vk_news_full_client.domain.FeedPost
 import com.example.vk_news_full_client.domain.StatisticItem
 import com.example.vk_news_full_client.domain.StatisticType
-import java.lang.IllegalArgumentException
 
 @Composable
 fun PostCard(
     modifier: Modifier = Modifier,
     feedPost: FeedPost,
-    onStatisticsItemClicked: (StatisticItem) -> Unit,
+    onViewsItemClicked: (StatisticItem) -> Unit,
+    onShareItemClicked: (StatisticItem) -> Unit,
+    onCommentsItemClicked: (StatisticItem) -> Unit,
+    onLikesItemClicked: (StatisticItem) -> Unit,
 ) {
     Card(
         modifier = modifier,
@@ -63,7 +65,10 @@ fun PostCard(
             Spacer(modifier = Modifier.height(8.dp))
             Statistics(
                 statistics = feedPost.statistics,
-                onItemClicked = onStatisticsItemClicked
+                onViewsItemClicked = onViewsItemClicked,
+                onShareItemClicked = onShareItemClicked,
+                onCommentsItemClicked = onCommentsItemClicked,
+                onLikesItemClicked = onLikesItemClicked,
             )
         }
     }
@@ -104,7 +109,10 @@ private fun PostHeader(
 @Composable
 private fun Statistics(
     statistics: List<StatisticItem>,
-    onItemClicked: (StatisticItem) -> Unit,
+    onViewsItemClicked: (StatisticItem) -> Unit,
+    onShareItemClicked: (StatisticItem) -> Unit,
+    onCommentsItemClicked: (StatisticItem) -> Unit,
+    onLikesItemClicked: (StatisticItem) -> Unit,
 ) {
     Row {
         Row(modifier = Modifier.weight(1f)) {
@@ -112,7 +120,7 @@ private fun Statistics(
             IconWithText(
                 icon = R.drawable.ic_views_count,
                 text = viewsItem.count.toString(),
-                onIconClicked = { onItemClicked(viewsItem) }
+                onIconClicked = { onViewsItemClicked(viewsItem) }
             )
         }
         Row(
@@ -123,21 +131,21 @@ private fun Statistics(
             IconWithText(
                 icon = R.drawable.ic_share,
                 text = sharesItem.count.toString(),
-                onIconClicked = { onItemClicked(sharesItem) }
+                onIconClicked = { onShareItemClicked(sharesItem) }
             )
 
             val commentsItem = statistics.getItemByType(StatisticType.COMMENTS)
             IconWithText(
                 icon = R.drawable.ic_comment,
                 text = commentsItem.count.toString(),
-                onIconClicked = { onItemClicked(commentsItem) }
+                onIconClicked = { onCommentsItemClicked(commentsItem) }
             )
 
             val likesItem = statistics.getItemByType(StatisticType.LIKES)
             IconWithText(
                 icon = R.drawable.ic_like,
                 text = likesItem.count.toString(),
-                onIconClicked = { onItemClicked(likesItem) }
+                onIconClicked = { onLikesItemClicked(likesItem) }
             )
         }
     }
@@ -155,7 +163,14 @@ private fun IconWithText(
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.clickable(onClick = onIconClicked, indication = rememberRipple(bounded = false), interactionSource = remember { MutableInteractionSource() })
+        modifier = Modifier
+            .clickable(
+                onClick = onIconClicked,
+                indication = rememberRipple(
+                    bounded = false
+                ),
+                interactionSource = remember { MutableInteractionSource() }
+            )
     ) {
         Icon(
             painter = painterResource(id = icon),
