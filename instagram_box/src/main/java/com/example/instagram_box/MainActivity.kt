@@ -11,10 +11,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,37 +52,13 @@ fun TextLazyColumn(viewModel: MainViewModel) {
                 .background(MaterialTheme.colors.background),
             contentAlignment = Alignment.Center,
         ) {
+            val models = viewModel.model.observeAsState(listOf())
             LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
-                item { Text(
-                    text = "ГЛАВНАЯ",
-                    color = Color.Cyan,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp)
-                        .align(Alignment.Center)) }
-                items(10) {
-                    InstaBox(mainViewModel = viewModel)
-                }
-
-                item { Text(
-                    text = "КАКОЙ ТО ТЕКСТ",
-                    color = Color.Cyan,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp)
-                        .align(Alignment.Center)) }
-
-                item { Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                    contentDescription = null,
-                    ) }
-
-                items(200) {
-                    InstaBox(mainViewModel = viewModel)
+                items(models.value) { model ->
+                    InstaBox(
+                        model = model,
+                        onFollowedButtonClickListener = viewModel::changeFollowingStatus
+                    )
                 }
             }
         }
