@@ -12,11 +12,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.example.instagram_box.theme.MyApplicationTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,13 +57,29 @@ fun TextLazyColumn(viewModel: MainViewModel) {
             contentAlignment = Alignment.Center,
         ) {
             val models = viewModel.model.observeAsState(listOf())
-            LazyColumn(horizontalAlignment = Alignment.CenterHorizontally) {
+            val lazyListState = rememberLazyListState()
+            val scope = rememberCoroutineScope()
+
+            LazyColumn(
+                state = lazyListState,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 items(models.value) { model ->
                     InstaBox(
                         model = model,
                         onFollowedButtonClickListener = viewModel::changeFollowingStatus
                     )
                 }
+            }
+            FloatingActionButton(
+                onClick = {
+                    scope.launch {
+                        lazyListState.scrollToItem(0)
+                    }
+
+                }
+            ) {
+
             }
         }
     }
