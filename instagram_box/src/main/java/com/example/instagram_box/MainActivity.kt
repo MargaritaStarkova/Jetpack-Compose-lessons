@@ -7,33 +7,30 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FixedThreshold
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.Text
+import androidx.compose.material.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
 import com.example.instagram_box.theme.MyApplicationTheme
-import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +44,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TextLazyColumn(viewModel: MainViewModel) {
     MyApplicationTheme {
@@ -57,29 +55,49 @@ fun TextLazyColumn(viewModel: MainViewModel) {
             contentAlignment = Alignment.Center,
         ) {
             val models = viewModel.model.observeAsState(listOf())
-            val lazyListState = rememberLazyListState()
-            val scope = rememberCoroutineScope()
 
             LazyColumn(
-                state = lazyListState,
+
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                items(models.value) { model ->
-                    InstaBox(
-                        model = model,
-                        onFollowedButtonClickListener = viewModel::changeFollowingStatus
-                    )
-                }
-            }
-            FloatingActionButton(
-                onClick = {
-                    scope.launch {
-                        lazyListState.scrollToItem(0)
+                items(models.value, key = { it.id }) { model ->
+                    val dismissState = rememberDismissState()
+
+                    if (dismissState.isDismissed(DismissDirection.EndToStart)) {
+                        viewModel.delete(model)
                     }
 
+                    SwipeToDismiss(
+                        state = dismissState,
+                        directions = setOf(
+                            DismissDirection.EndToStart,
+                        ),
+                        dismissThresholds = {
+                            FixedThreshold(200.dp)
+                        },
+                        background = {
+                            Box(
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .background(Color.Red.copy(alpha = 0.5f))
+                                    .fillMaxSize(),
+                                contentAlignment = Alignment.CenterEnd,
+                            ) {
+                                Text(
+                                    modifier = Modifier.padding(10.dp),
+                                    text = "Delete item",
+                                    color = Color.White,
+                                    fontSize = 24.sp,
+                                )
+                            }
+                        }
+                    ) {
+                        InstaBox(
+                            model = model,
+                            onFollowedButtonClickListener = viewModel::changeFollowingStatus
+                        )
+                    }
                 }
-            ) {
-
             }
         }
     }
