@@ -21,6 +21,13 @@ class MainViewModel : ViewModel() {
     private val _models = MutableLiveData<List<FeedPostModel>>(initialList)
     val model: LiveData<List<FeedPostModel>> = _models
 
+    private val _selectedNavItem = MutableLiveData<NavigationItem>(NavigationItem.Home)
+    val selectedNavItem: LiveData<NavigationItem> = _selectedNavItem
+
+    fun selectedNavItem(item: NavigationItem) {
+        _selectedNavItem.value = item
+    }
+
 
     fun updateCount(feedPostModel: FeedPostModel, item: StatisticItem) {
 
