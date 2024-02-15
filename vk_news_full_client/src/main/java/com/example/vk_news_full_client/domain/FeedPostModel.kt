@@ -4,7 +4,8 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.example.instagram_box.R
 
-data class FeedPost(
+data class FeedPostModel(
+    val id: Int = 0,
     val communityName: String = "уволено",
     val publicationDate: String = "14:00",
     @DrawableRes val avatarResId: Int = R.drawable.post_comunity_thrumbnail,
@@ -15,6 +16,5 @@ data class FeedPost(
         StatisticItem(type = StatisticType.SHARES, count = 7),
         StatisticItem(type = StatisticType.COMMENTS, count = 8),
         StatisticItem(type = StatisticType.LIKES, count = 27)
-
     )
 )

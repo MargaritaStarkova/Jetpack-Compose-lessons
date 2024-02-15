@@ -31,14 +31,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.instagram_box.R
-import com.example.vk_news_full_client.domain.FeedPost
+import com.example.vk_news_full_client.domain.FeedPostModel
 import com.example.vk_news_full_client.domain.StatisticItem
 import com.example.vk_news_full_client.domain.StatisticType
 
 @Composable
 fun PostCard(
     modifier: Modifier = Modifier,
-    feedPost: FeedPost,
+    feedPost: FeedPostModel,
     onViewsItemClicked: (StatisticItem) -> Unit,
     onShareItemClicked: (StatisticItem) -> Unit,
     onCommentsItemClicked: (StatisticItem) -> Unit,
@@ -58,7 +58,11 @@ fun PostCard(
             Image(
                 painter = painterResource(id = feedPost.contentImageResId),
                 contentDescription = null,
-                modifier = Modifier.fillMaxWidth(),
+                modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(300.dp)
+                ,
                 alignment = Alignment.Center,
                 contentScale = ContentScale.FillWidth
             )
@@ -76,7 +80,7 @@ fun PostCard(
 
 @Composable
 private fun PostHeader(
-    feedPost: FeedPost,
+    feedPost: FeedPostModel,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
