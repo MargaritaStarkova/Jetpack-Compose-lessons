@@ -8,27 +8,23 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.vk_news_full_client.navigation.AppNavGraph
+import com.example.vk_news_full_client.navigation.Screen
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterialApi::class)
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
 
     val navHostController = rememberNavController()
-
 
     Scaffold(bottomBar = {
         BottomNavigation {
@@ -41,7 +37,15 @@ fun MainScreen(viewModel: MainViewModel) {
             items.forEach { item ->
                 BottomNavigationItem(
                     selected = currentRoute == item.screen.route,
-                    onClick = { navHostController.navigate(item.screen.route) },
+                    onClick = {
+                        navHostController.navigate(item.screen.route) {
+                            popUpTo(Screen.NewsFeed.route) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
                     icon = { Icon(item.icon, contentDescription = null) },
                     label = { Text(text = stringResource(id = item.titleResId)) },
                     selectedContentColor = MaterialTheme.colors.onPrimary,
@@ -68,7 +72,7 @@ fun MainScreen(viewModel: MainViewModel) {
 fun TextCounter(
     name: String,
 ) {
-    var count by remember {
+    var count by rememberSaveable {
         mutableIntStateOf(0)
     }
 

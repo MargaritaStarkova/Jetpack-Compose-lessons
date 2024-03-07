@@ -31,7 +31,6 @@ fun HomeScreen(
 ) {
     val models = viewModel.model.observeAsState(listOf())
 
-
     LazyColumn(
         modifier = androidx.compose.ui.Modifier.padding(paddingValues),
         contentPadding = PaddingValues(
